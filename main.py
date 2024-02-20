@@ -1,6 +1,5 @@
-
-
 import pygame
+import sys
 from pygame.locals import  *
 
 pygame.init()
@@ -12,11 +11,11 @@ screen_width = 1100
 screen_height = 850
 window_size = (1200, 100)
 screen = pygame.display.set_mode((screen_width, screen_height))
-icon = pygame.image.load('image/ara.jpg')
+icon = pygame.image.load('image/icon.png')
 pygame.display.set_icon(icon)
 
 
-pygame.display.set_caption("Ara bird")
+pygame.display.set_caption("Bomb bird")
 
 ground_scroll = 0
 scroll_speed = 4
@@ -53,7 +52,7 @@ class Bird(pygame.sprite.Sprite):
 
         if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
             self.clicked = True
-            self.vel = -5
+            self.vel = -8
         if pygame.mouse.get_pressed()[0] == 0:
             self.clicked = False
 
@@ -77,30 +76,40 @@ flappy = Bird(100, int(screen_height / 2))
 
 bird_group.add(flappy)
 
+backgroun_x = 0
 
+bg_sound = pygame.mixer.Sound('souds/bomb birds.mp3')
+bg_sound.play()
 
 
 run = True
 #rtishevandmakishev
 while run:
+
+
+
     clock.tick(fps)
 
-    screen.blit(background_image, (0, 0))
+    screen.blit(background_image, (backgroun_x, 0))
+    screen.blit(background_image, (backgroun_x + 1100, 0))
     screen.blit(ground_img, (ground_scroll, 768))
 
     bird_group.draw(screen)
     bird_group.update()
     ground_scroll -= scroll_speed
 
+
+    backgroun_x -= 2
+    if backgroun_x == -1100:
+        backgroun_x = 0
     if abs(ground_scroll) > 135:
         ground_scroll = 0
 
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            run = False
-            pygame.quit()
-            exit()
+            sys.exit()
+
     pygame.display.update()
 pygame.quit()
 pygame.display.flip()
