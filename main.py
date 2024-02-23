@@ -20,7 +20,7 @@ pygame.display.set_caption("Pig bird")
 
 font = pygame.font.SysFont('Roboto', 60)
 
-white = (255, 0, 0)
+white = (255, 165, 0)
 
 ground_scroll = 0
 scroll_speed = 4
@@ -33,7 +33,7 @@ score = 0
 pass_pipe = False
 gameplay = True
 label = pygame.font.SysFont('Roboto', 40)
-lose_label = label.render('Вы проиграли!', False, (255, 165, 0))
+lose_label = label.render('Вы проиграли!', False, (255, 0, 0))
 restart_label = label.render('', False, (115, 132, 148))
 restart_label_rec = restart_label.get_rect(topleft=(180, 200))
 
