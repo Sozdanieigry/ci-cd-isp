@@ -32,7 +32,10 @@ last_pipe = pygame.time.get_ticks() - pipe_frequency
 score = 0
 pass_pipe = False
 gameplay = True
-
+label = pygame.font.SysFont('Roboto', 40)
+lose_label = label.render('Вы проиграли!', False, (255, 165, 0))
+restart_label = label.render('', False, (115, 132, 148))
+restart_label_rec = restart_label.get_rect(topleft=(180, 200))
 
 
 background_image = pygame.image.load("image/sdfe.jpg")
@@ -49,7 +52,7 @@ class Bird(pygame.sprite.Sprite):
         self.images = []
         self.index = 0
         self.counter = 0
-        for num in range(1, 7):
+        for num in range(1, 8):
             img = pygame.image.load(f'image/bird{num}.png')
             self.images.append(img)
 
@@ -84,9 +87,9 @@ class Bird(pygame.sprite.Sprite):
                     self.index = 0
             self.image = self.images[self.index]
 
-            self.image = pygame.transform.rotate(self.images[self.index], self.vel * -2 )
+            self.image = pygame.transform.rotate(self.images[self.index], self.vel * -10)
         else:
-            self.image = pygame.transform.rotate(self.images[self.index], -90)
+            self.image = pygame.transform.rotate(self.images[self.index], -180)
 
 
 class Pipe(pygame.sprite.Sprite):
@@ -117,7 +120,7 @@ bird_group.add(flappy)
 
 backgroun_x = 0
 
-bg_sound = pygame.mixer.Sound('souds/bomb birds.mp3')
+bg_sound = pygame.mixer.Sound('souds/bad piggies drip.mp3')
 bg_sound.play()
 
 
@@ -193,7 +196,15 @@ while run:
             if event.type == pygame.MOUSEBUTTONDOWN and flying == False and game_over == False:
                 flying = True
     else:
-        screen.fill((87, 88, 89))
+
+        screen.blit(lose_label, (400, 25))
+        screen.blit(restart_label, restart_label_rec)
+
+
+        mouse = pygame.mouse.get_pos()
+        if restart_label_rec.collidepoint(mouse) and pygame.mouse.get_pressed(1):
+            gameplay = True
+
 
     pygame.display.update()
 pygame.quit()
