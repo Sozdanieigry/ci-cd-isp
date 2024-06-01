@@ -41,11 +41,20 @@ restart_label_rec = restart_label.get_rect(topleft=(180, 200))
 background_image = pygame.image.load("image/sdfe.jpg")
 ground_img = pygame.image.load('image/ground1.png')
 ground_img = pygame.transform.scale(ground_img, window_size)
+button_img = pygame.image.load('image/restart.png')
 
 
 def draw_text(text, font, text_col, x, y):
     img = font.render(text, True, text_col)
     screen.blit(img, (x, y))
+
+
+def reset_game():
+    pipe_group.empty()
+    flappy.rect.x = 100
+    flappy.rect.y = int(screen_height / 2)
+    score = 0
+    return score
 class Bird(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
@@ -109,13 +118,34 @@ class Pipe(pygame.sprite.Sprite):
             self.kill()
 
 
+class Button():
+    def __init__(self, x, y, image):
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+
+    def draw(self):
+
+        action = False
+
+        pos = pygame.mouse.get_pos()
+
+        if self.rect.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0] == 1:
+                action = True
+
+
+        screen.blit(self.image, (self.rect.x, self.rect.y))
+
+        return  action
+
 bird_group = pygame.sprite.Group()
 pipe_group = pygame.sprite.Group()
 flappy = Bird(100, int(screen_height / 2))
 
 bird_group.add(flappy)
 
-
+button = Button(screen_width // 2 - 50, screen_height // 2 -100, button_img)
 
 
 backgroun_x = 0
@@ -141,6 +171,8 @@ while run:
     bird_group.draw(screen)
     bird_group.update()
     pipe_group.draw(screen)
+
+
 
     if gameplay:
         screen.blit(ground_img, (ground_scroll, 768))
@@ -190,20 +222,21 @@ while run:
             pipe_group.update()
 
 
+
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN and flying == False and game_over == False:
                 flying = True
     else:
-
+        if button.draw() == True:
+            game_over = False
+            score = reset_game()
         screen.blit(lose_label, (400, 25))
-        screen.blit(restart_label, restart_label_rec)
 
 
-        mouse = pygame.mouse.get_pos()
-        if restart_label_rec.collidepoint(mouse) and pygame.mouse.get_pressed(1):
-            gameplay = True
+
 
 
     pygame.display.update()
